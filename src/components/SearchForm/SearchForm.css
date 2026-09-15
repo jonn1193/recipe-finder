@@ -51,7 +51,7 @@
 .search__button:disabled {
   background: rgba(140, 172, 229, 1);
   box-shadow: none;
-  cursor: default;
+  cursor: pointer;
 }
 
 @media (max-width: 760px) {
@@ -65,3 +65,8 @@
     min-height: 48px;
   }
 }
+
+.search__input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+

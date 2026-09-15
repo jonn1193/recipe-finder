@@ -30,13 +30,19 @@
 .modal__close {
   background: transparent;
   border: 0;
-  color: rgba(26, 27, 34, 0.6);
+  color: rgba(47, 113, 229, 1);
   cursor: pointer;
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 700;
   line-height: 1;
+  padding: 0;
   position: absolute;
   right: 20px;
   top: 18px;
+}
+
+.modal__close:focus {
+  outline: none;
 }
 
 .modal__title {

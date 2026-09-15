@@ -12,9 +12,14 @@
 
 .search__row {
   background: #fff;
+  border: 2px solid transparent;
   border-radius: 999px;
   display: flex;
-  padding: 8px;
+  padding: 6px;
+}
+
+.search__row:focus-within {
+  border-color: rgba(47, 113, 229, 1);
 }
 
 .search__input {
@@ -28,8 +33,7 @@
 }
 
 .search__input:focus {
-  outline: 2px solid rgba(47, 113, 229, 1);
-  outline-offset: 2px;
+  outline: none;
 }
 
 .search__button {

@@ -1,4 +1,5 @@
 .recipe-card {
+  animation: recipe-card-enter 1.25s ease-out both;
   background: #fff;
   border: 1px solid rgba(26, 27, 34, 0.08);
   border-radius: 8px;
@@ -52,4 +53,22 @@
   background: rgba(47, 113, 229, 1);
   border-color: rgba(47, 113, 229, 1);
   color: #fff;
+}
+
+@keyframes recipe-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recipe-card {
+    animation: none;
+  }
 }

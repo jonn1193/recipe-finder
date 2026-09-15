@@ -97,4 +97,4 @@ Deployed site: [Recipe Finder](https://jonn1193.github.io/recipe-finder/)
 
 ## Project Pitch Video
 
-Pitch video: _Add video link here_
+Pitch video: [Recipe Finder Pitch Video](https://www.loom.com/share/cf7242bd97744cf2ada86805c79fc2a5)

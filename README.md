@@ -93,7 +93,7 @@ npm run lint
 
 ## Deployment
 
-Deployed site: _Add deployed link here_
+Deployed site: [Recipe Finder](https://jonn1193.github.io/recipe-finder/)
 
 ## Project Pitch Video
 

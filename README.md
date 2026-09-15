@@ -1,16 +1,100 @@
-# React + Vite
+# Recipe Finder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Recipe Finder is a custom front-end React application for searching recipes, viewing meal cards, and saving favorite recipes for later. The app uses TheMealDB API for recipe data and includes simulated backend responses for authentication and saved recipe actions during Stage 1.
 
-Currently, two official plugins are available:
+## Project Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Search recipes using TheMealDB
+- Display recipe cards from API response data
+- Show a preloader while recipes are loading
+- Show an error message if the API request fails
+- Show a "Nothing found" message when a search has no results
+- Render recipes three at a time with a "Show more" button
+- Save and remove recipes using simulated backend responses
+- Navigate between the main page and saved recipes page with React Router
+- Open and close login/register modals
+- Simulate user login, registration, token checking, and logout
+- Responsive layout for desktop, tablet, and mobile screens
 
-## React Compiler
+## Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
+- JavaScript
+- HTML
+- CSS
+- BEM naming methodology
+- TheMealDB API
 
-## Expanding the ESLint configuration
+## API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project uses TheMealDB API.
+
+API documentation: https://www.themealdb.com/api.php
+
+The recipe search request is handled in:
+
+```text
+src/utils/MealDbApi.js
+```
+
+Simulated backend responses are handled in:
+
+```text
+src/utils/MainApi.js
+```
+
+## Project Structure
+
+```text
+src/
+  components/
+  images/
+  utils/
+  vendor/
+```
+
+Component styles are organized alongside their matching component files.
+
+## Running the Project Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build the project:
+
+```bash
+npm run build
+```
+
+Run lint checks:
+
+```bash
+npm run lint
+```
+
+## Demo / Usage
+
+1. Search for a recipe by ingredient or meal name.
+2. View recipe cards returned from TheMealDB.
+3. Click "Show more" to reveal additional recipes.
+4. Save recipes and view them on the Saved Recipes page.
+5. Use the login/register modals to preview the authentication flow.
+
+## Deployment
+
+Deployed site: _Add deployed link here_
+
+## Project Pitch Video
+
+Pitch video: _Add video link here_

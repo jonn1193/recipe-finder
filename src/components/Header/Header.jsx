@@ -1,24 +1,22 @@
+import "./Header.css";
+import { Link } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 
-function Header({ currentPath, onNavigate, onLoginClick, onRegisterClick }) {
+function Header({ currentUser, onLoginClick, onRegisterClick, onLogoutClick }) {
   return (
     <header className="header">
-      <button
-        className="header__logo"
-        type="button"
-        onClick={() => onNavigate("/")}
-        aria-label="Go to homepage"
-      >
+      <Link className="header__logo" to="/" aria-label="Go to homepage">
         Recipe Finder
-      </button>
+      </Link>
       <Navigation
-        currentPath={currentPath}
-        onNavigate={onNavigate}
+        currentUser={currentUser}
         onLoginClick={onLoginClick}
         onRegisterClick={onRegisterClick}
+        onLogoutClick={onLogoutClick}
       />
     </header>
   );
 }
 
 export default Header;
+

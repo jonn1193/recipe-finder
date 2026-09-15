@@ -1,17 +1,30 @@
-import Modal from "../Modal/Modal";
+import "./LoginModal.css";
+import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
-function LoginModal({ isOpen, onClose, onRegisterClick }) {
+function LoginModal({ isOpen, onClose, onLoginClick, onRegisterClick }) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    onLoginClick({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+  };
+
   return (
-    <Modal isOpen={isOpen} title="Log in" onClose={onClose}>
-      <form className="modal__form">
+    <ModalWithForm isOpen={isOpen} title="Log in" onClose={onClose}>
+      <form className="modal__form" onSubmit={handleSubmit}>
         <label className="modal__label" htmlFor="login-email">
           Email
         </label>
         <input
           className="modal__input"
           id="login-email"
+          name="email"
           type="email"
           placeholder="you@example.com"
+          required
         />
         <label className="modal__label" htmlFor="login-password">
           Password
@@ -19,10 +32,12 @@ function LoginModal({ isOpen, onClose, onRegisterClick }) {
         <input
           className="modal__input"
           id="login-password"
+          name="password"
           type="password"
           placeholder="Enter your password"
+          required
         />
-        <button className="modal__submit" type="button">
+        <button className="modal__submit" type="submit">
           Log in
         </button>
       </form>
@@ -32,8 +47,9 @@ function LoginModal({ isOpen, onClose, onRegisterClick }) {
           Create an account
         </button>
       </p>
-    </Modal>
+    </ModalWithForm>
   );
 }
 
 export default LoginModal;
+

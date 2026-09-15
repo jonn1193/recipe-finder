@@ -1,6 +1,7 @@
+import "./ModalWithForm.css";
 import { useEffect } from "react";
 
-function Modal({ isOpen, title, children, onClose }) {
+function ModalWithForm({ isOpen, title, children, onClose }) {
   useEffect(() => {
     if (!isOpen) {
       return undefined;
@@ -44,4 +45,5 @@ function Modal({ isOpen, title, children, onClose }) {
   );
 }
 
-export default Modal;
+export default ModalWithForm;
+

@@ -1,0 +1,29 @@
+.header {
+  align-items: center;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 20px 32px;
+}
+
+.header__logo {
+  background: transparent;
+  border: 0;
+  color: rgba(26, 27, 34, 1);
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 800;
+  padding: 0;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

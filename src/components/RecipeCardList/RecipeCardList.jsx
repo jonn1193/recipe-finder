@@ -1,3 +1,4 @@
+import "./RecipeCardList.css";
 import RecipeCard from "../RecipeCard/RecipeCard";
 
 function RecipeCardList({ recipes, savedRecipeIds, onSaveRecipe }) {
@@ -16,3 +17,4 @@ function RecipeCardList({ recipes, savedRecipeIds, onSaveRecipe }) {
 }
 
 export default RecipeCardList;
+

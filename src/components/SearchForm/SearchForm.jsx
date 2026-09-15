@@ -1,3 +1,4 @@
+import "./SearchForm.css";
 import { useState } from "react";
 
 function SearchForm({ onSearch }) {
@@ -20,6 +21,7 @@ function SearchForm({ onSearch }) {
           name="search"
           type="search"
           placeholder="Try chicken, pasta, or vegetarian"
+          required
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -32,3 +34,4 @@ function SearchForm({ onSearch }) {
 }
 
 export default SearchForm;
+

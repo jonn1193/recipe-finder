@@ -1,3 +1,4 @@
+import "./RecipeCard.css";
 function RecipeCard({ recipe, isSaved, onSaveRecipe }) {
   return (
     <li className="recipe-card">
@@ -29,3 +30,4 @@ function RecipeCard({ recipe, isSaved, onSaveRecipe }) {
 }
 
 export default RecipeCard;
+

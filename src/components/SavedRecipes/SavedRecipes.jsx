@@ -1,3 +1,4 @@
+import "./SavedRecipes.css";
 import RecipeCardList from "../RecipeCardList/RecipeCardList";
 
 function SavedRecipes({ recipes, savedRecipeIds, onSaveRecipe }) {
@@ -25,3 +26,4 @@ function SavedRecipes({ recipes, savedRecipeIds, onSaveRecipe }) {
 }
 
 export default SavedRecipes;
+

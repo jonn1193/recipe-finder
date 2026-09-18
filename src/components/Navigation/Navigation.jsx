@@ -1,7 +1,12 @@
 import "./Navigation.css";
 import { NavLink } from "react-router-dom";
 
-function Navigation({ currentUser, onLoginClick, onRegisterClick, onLogoutClick }) {
+function Navigation({
+  currentUser,
+  onLoginClick,
+  onRegisterClick,
+  onLogoutClick,
+}) {
   const getNavLinkClassName = ({ isActive }) =>
     `nav__link ${isActive ? "nav__link_active" : ""}`;
 
@@ -10,20 +15,30 @@ function Navigation({ currentUser, onLoginClick, onRegisterClick, onLogoutClick 
       <NavLink className={getNavLinkClassName} to="/">
         Home
       </NavLink>
-      <NavLink className={getNavLinkClassName} to="/saved-recipes">
-        Saved Recipes
-      </NavLink>
+      {currentUser && (
+        <NavLink className={getNavLinkClassName} to="/saved-recipes">
+          Saved Recipes
+        </NavLink>
+      )}
       <div className="nav__actions">
         {currentUser ? (
           <>
             <span className="nav__user">{currentUser.name}</span>
-            <button className="nav__button" type="button" onClick={onLogoutClick}>
+            <button
+              className="nav__button"
+              type="button"
+              onClick={onLogoutClick}
+            >
               Log out
             </button>
           </>
         ) : (
           <>
-            <button className="nav__button" type="button" onClick={onLoginClick}>
+            <button
+              className="nav__button"
+              type="button"
+              onClick={onLoginClick}
+            >
               Log in
             </button>
             <button
@@ -41,4 +56,3 @@ function Navigation({ currentUser, onLoginClick, onRegisterClick, onLogoutClick 
 }
 
 export default Navigation;
-

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -7,6 +7,7 @@ import SavedRecipes from "./components/SavedRecipes/SavedRecipes";
 import Footer from "./components/Footer/Footer";
 import LoginModal from "./components/LoginModal/LoginModal";
 import RegisterModal from "./components/RegisterModal/RegisterModal";
+import RecipeDetailsModal from "./components/RecipeDetailsModal/RecipeDetailsModal";
 import { searchRecipes } from "./utils/MealDbApi";
 import {
   checkToken,
@@ -26,6 +27,7 @@ function App() {
   const [recipes, setRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [visibleRecipeCount, setVisibleRecipeCount] = useState(
     VISIBLE_RECIPE_INCREMENT,
   );
@@ -91,6 +93,11 @@ function App() {
   };
 
   const handleSaveRecipe = (recipeId) => {
+    if (!currentUser) {
+      setActiveModal("login");
+      return;
+    }
+
     const isAlreadySaved = savedRecipes.some(
       (recipe) => recipe.idMeal === recipeId,
     );
@@ -117,6 +124,11 @@ function App() {
     }
   };
 
+  const handleRecipeClick = (recipe) => {
+    setSelectedRecipe(recipe);
+    setActiveModal("recipe-details");
+  };
+
   const handleLogin = ({ email, password }) => {
     loginUser({ email, password })
       .then(({ token, email: userEmail }) => {
@@ -140,6 +152,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("recipe-finder-token");
     setCurrentUser(null);
+    setSavedRecipes([]);
   };
 
   return (
@@ -164,6 +177,7 @@ function App() {
               hasSearched={hasSearched}
               onSearch={handleSearch}
               onSaveRecipe={handleSaveRecipe}
+              onRecipeClick={handleRecipeClick}
               onShowMore={handleShowMore}
             />
           }
@@ -171,11 +185,16 @@ function App() {
         <Route
           path="/saved-recipes"
           element={
-            <SavedRecipes
-              recipes={savedRecipes}
-              savedRecipeIds={savedRecipeIds}
-              onSaveRecipe={handleSaveRecipe}
-            />
+            currentUser ? (
+              <SavedRecipes
+                recipes={savedRecipes}
+                savedRecipeIds={savedRecipeIds}
+                onSaveRecipe={handleSaveRecipe}
+                onRecipeClick={handleRecipeClick}
+              />
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
       </Routes>
@@ -193,6 +212,17 @@ function App() {
         onClose={() => setActiveModal(null)}
         onRegisterClick={handleRegister}
         onLoginClick={() => setActiveModal("login")}
+      />
+      <RecipeDetailsModal
+        recipe={selectedRecipe}
+        isOpen={activeModal === "recipe-details"}
+        isSaved={
+          selectedRecipe
+            ? savedRecipeIds.includes(selectedRecipe.idMeal)
+            : false
+        }
+        onClose={() => setActiveModal(null)}
+        onSaveRecipe={handleSaveRecipe}
       />
     </div>
   );

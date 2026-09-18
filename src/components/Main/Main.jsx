@@ -12,11 +12,13 @@ function Main({
   hasSearched,
   onSearch,
   onSaveRecipe,
+  onRecipeClick,
   onShowMore,
 }) {
   const visibleRecipes = recipes.slice(0, visibleRecipeCount);
   const hasMoreRecipes = visibleRecipeCount < recipes.length;
-  const showNothingFound = hasSearched && !isLoading && !errorMessage && !recipes.length;
+  const showNothingFound =
+    hasSearched && !isLoading && !errorMessage && !recipes.length;
 
   return (
     <main className="main">
@@ -51,6 +53,7 @@ function Main({
               recipes={visibleRecipes}
               savedRecipeIds={savedRecipeIds}
               onSaveRecipe={onSaveRecipe}
+              onRecipeClick={onRecipeClick}
             />
             {hasMoreRecipes && (
               <button
@@ -69,4 +72,3 @@ function Main({
 }
 
 export default Main;
-

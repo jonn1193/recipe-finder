@@ -1,7 +1,12 @@
 import "./RecipeCardList.css";
 import RecipeCard from "../RecipeCard/RecipeCard";
 
-function RecipeCardList({ recipes, savedRecipeIds, onSaveRecipe }) {
+function RecipeCardList({
+  recipes,
+  savedRecipeIds,
+  onSaveRecipe,
+  onRecipeClick,
+}) {
   return (
     <ul className="recipe-grid">
       {recipes.map((recipe) => (
@@ -10,6 +15,7 @@ function RecipeCardList({ recipes, savedRecipeIds, onSaveRecipe }) {
           recipe={recipe}
           isSaved={savedRecipeIds.includes(recipe.idMeal)}
           onSaveRecipe={onSaveRecipe}
+          onRecipeClick={onRecipeClick}
         />
       ))}
     </ul>
@@ -17,4 +23,3 @@ function RecipeCardList({ recipes, savedRecipeIds, onSaveRecipe }) {
 }
 
 export default RecipeCardList;
-

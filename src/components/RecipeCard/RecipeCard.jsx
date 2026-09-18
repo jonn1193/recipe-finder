@@ -1,19 +1,26 @@
 import "./RecipeCard.css";
-function RecipeCard({ recipe, isSaved, onSaveRecipe }) {
+function RecipeCard({ recipe, isSaved, onSaveRecipe, onRecipeClick }) {
   return (
     <li className="recipe-card">
-      <img
-        className="recipe-card__image"
-        src={recipe.strMealThumb}
-        alt={recipe.strMeal}
-      />
-      <div className="recipe-card__content">
+      <button
+        className="recipe-card__details"
+        type="button"
+        onClick={() => onRecipeClick(recipe)}
+        aria-label={`View recipe details for ${recipe.strMeal}`}
+      >
+        <img
+          className="recipe-card__image"
+          src={recipe.strMealThumb}
+          alt={recipe.strMeal}
+        />
         <div>
           <p className="recipe-card__meta">
             {recipe.strArea} / {recipe.strCategory}
           </p>
           <h3 className="recipe-card__title">{recipe.strMeal}</h3>
         </div>
+      </button>
+      <div className="recipe-card__actions">
         <button
           className={`recipe-card__save ${
             isSaved ? "recipe-card__save_active" : ""
@@ -30,4 +37,3 @@ function RecipeCard({ recipe, isSaved, onSaveRecipe }) {
 }
 
 export default RecipeCard;
-

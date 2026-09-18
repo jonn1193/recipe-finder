@@ -1,7 +1,7 @@
 import "./ModalWithForm.css";
 import { useEffect } from "react";
 
-function ModalWithForm({ isOpen, title, children, onClose }) {
+function ModalWithForm({ isOpen, title, children, onClose, className = "" }) {
   useEffect(() => {
     if (!isOpen) {
       return undefined;
@@ -22,7 +22,12 @@ function ModalWithForm({ isOpen, title, children, onClose }) {
   }
 
   return (
-    <div className="modal" role="dialog" aria-modal="true" aria-label={title}>
+    <div
+      className={`modal ${className}`.trim()}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
       <button
         className="modal__overlay"
         type="button"
@@ -46,4 +51,3 @@ function ModalWithForm({ isOpen, title, children, onClose }) {
 }
 
 export default ModalWithForm;
-

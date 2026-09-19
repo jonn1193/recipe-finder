@@ -1,5 +1,5 @@
 import "./RecipeDetailsModal.css";
-import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import Modal from "../Modal/Modal";
 
 function getIngredients(recipe) {
   return Array.from({ length: 20 }, (_, index) => {
@@ -28,12 +28,13 @@ function RecipeDetailsModal({
   const ingredients = getIngredients(recipe);
 
   return (
-    <ModalWithForm
+    <Modal
       className="recipe-details-modal"
       isOpen={isOpen}
-      title={recipe.strMeal}
+      ariaLabel={recipe.strMeal}
       onClose={onClose}
     >
+      <h2 className="modal__title">{recipe.strMeal}</h2>
       <div className="recipe-details">
         <img
           className="recipe-details__image"
@@ -74,7 +75,7 @@ function RecipeDetailsModal({
           {isSaved ? "Remove from saved recipes" : "Save recipe"}
         </button>
       </div>
-    </ModalWithForm>
+    </Modal>
   );
 }
 

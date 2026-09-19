@@ -89,6 +89,14 @@
   font-weight: 700;
   margin: 32px auto 0;
   padding: 14px 34px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.recipes__show-more:hover {
+  background: rgba(47, 113, 229, 1);
+  color: #fff;
 }
 
 @media (max-width: 760px) {

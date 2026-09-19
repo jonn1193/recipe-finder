@@ -17,6 +17,11 @@
   font-weight: 800;
   padding: 0;
   text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.header__logo:hover {
+  color: rgba(47, 113, 229, 1);
 }
 
 @media (max-width: 760px) {

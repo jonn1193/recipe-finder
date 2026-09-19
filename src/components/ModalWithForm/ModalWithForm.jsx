@@ -1,52 +1,27 @@
 import "./ModalWithForm.css";
-import { useEffect } from "react";
+import Modal from "../Modal/Modal";
 
-function ModalWithForm({ isOpen, title, children, onClose, className = "" }) {
-  useEffect(() => {
-    if (!isOpen) {
-      return undefined;
-    }
-
-    const handleEscape = (event) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) {
-    return null;
-  }
-
+function ModalWithForm({
+  isOpen,
+  title,
+  buttonText,
+  isValid,
+  children,
+  footer,
+  onClose,
+  onSubmit,
+}) {
   return (
-    <div
-      className={`modal ${className}`.trim()}
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-    >
-      <button
-        className="modal__overlay"
-        type="button"
-        aria-label="Close modal"
-        onClick={onClose}
-      />
-      <div className="modal__content">
-        <button
-          className="modal__close"
-          type="button"
-          aria-label="Close modal"
-          onClick={onClose}
-        >
-          x
-        </button>
-        <h2 className="modal__title">{title}</h2>
+    <Modal isOpen={isOpen} ariaLabel={title} onClose={onClose}>
+      <h2 className="modal__title">{title}</h2>
+      <form className="modal__form" onSubmit={onSubmit} noValidate>
         {children}
-      </div>
-    </div>
+        <button className="modal__submit" type="submit" disabled={!isValid}>
+          {buttonText}
+        </button>
+        {footer}
+      </form>
+    </Modal>
   );
 }
 

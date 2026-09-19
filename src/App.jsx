@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 import LoginModal from "./components/LoginModal/LoginModal";
 import RegisterModal from "./components/RegisterModal/RegisterModal";
 import RecipeDetailsModal from "./components/RecipeDetailsModal/RecipeDetailsModal";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { searchRecipes } from "./utils/MealDbApi";
 import {
   checkToken,
@@ -34,6 +35,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [hasSearched, setHasSearched] = useState(true);
+  const [isCheckingToken, setIsCheckingToken] = useState(() =>
+    Boolean(localStorage.getItem("recipe-finder-token")),
+  );
 
   const savedRecipeIds = savedRecipes.map((recipe) => recipe.idMeal);
 
@@ -82,6 +86,9 @@ function App() {
         })
         .catch(() => {
           localStorage.removeItem("recipe-finder-token");
+        })
+        .finally(() => {
+          setIsCheckingToken(false);
         });
     }
   }, []);
@@ -185,16 +192,17 @@ function App() {
         <Route
           path="/saved-recipes"
           element={
-            currentUser ? (
+            <ProtectedRoute
+              isLoggedIn={Boolean(currentUser)}
+              isCheckingToken={isCheckingToken}
+            >
               <SavedRecipes
                 recipes={savedRecipes}
                 savedRecipeIds={savedRecipeIds}
                 onSaveRecipe={handleSaveRecipe}
                 onRecipeClick={handleRecipeClick}
               />
-            ) : (
-              <Navigate to="/" replace />
-            )
+            </ProtectedRoute>
           }
         />
       </Routes>

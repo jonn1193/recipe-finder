@@ -1,0 +1,40 @@
+.saved {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 42px 32px 56px;
+}
+
+.saved__intro {
+  margin-bottom: 28px;
+}
+
+.saved__eyebrow {
+  color: rgba(26, 27, 34, 0.52);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.saved__title {
+  font-size: 36px;
+  line-height: 1.15;
+  margin: 8px 0 0;
+}
+
+.saved__description,
+.saved__empty {
+  color: rgba(26, 27, 34, 0.66);
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 12px 0 0;
+  max-width: 680px;
+}
+
+@media (max-width: 760px) {
+  .saved {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

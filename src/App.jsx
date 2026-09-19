@@ -1,122 +1,239 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import Header from "./components/Header/Header";
+import Main from "./components/Main/Main";
+import SavedRecipes from "./components/SavedRecipes/SavedRecipes";
+import Footer from "./components/Footer/Footer";
+import LoginModal from "./components/LoginModal/LoginModal";
+import RegisterModal from "./components/RegisterModal/RegisterModal";
+import RecipeDetailsModal from "./components/RecipeDetailsModal/RecipeDetailsModal";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { searchRecipes } from "./utils/MealDbApi";
+import {
+  checkToken,
+  deleteRecipe,
+  loginUser,
+  registerUser,
+  saveRecipe,
+} from "./utils/MainApi";
+import {
+  API_ERROR_MESSAGE,
+  DEFAULT_SEARCH_QUERY,
+  VISIBLE_RECIPE_INCREMENT,
+} from "./utils/constants";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeModal, setActiveModal] = useState(null);
+  const [recipes, setRecipes] = useState([]);
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [visibleRecipeCount, setVisibleRecipeCount] = useState(
+    VISIBLE_RECIPE_INCREMENT,
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [hasSearched, setHasSearched] = useState(true);
+  const [isCheckingToken, setIsCheckingToken] = useState(() =>
+    Boolean(localStorage.getItem("recipe-finder-token")),
+  );
+
+  const savedRecipeIds = savedRecipes.map((recipe) => recipe.idMeal);
+
+  const handleSearch = (query) => {
+    const searchQuery = query.trim() || DEFAULT_SEARCH_QUERY;
+
+    setIsLoading(true);
+    setErrorMessage("");
+    setHasSearched(true);
+    setVisibleRecipeCount(VISIBLE_RECIPE_INCREMENT);
+
+    searchRecipes(searchQuery)
+      .then((meals) => {
+        setRecipes(meals);
+      })
+      .catch(() => {
+        setRecipes([]);
+        setErrorMessage(API_ERROR_MESSAGE);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    searchRecipes(DEFAULT_SEARCH_QUERY)
+      .then((meals) => {
+        setRecipes(meals);
+      })
+      .catch(() => {
+        setRecipes([]);
+        setErrorMessage(API_ERROR_MESSAGE);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("recipe-finder-token");
+
+    if (token) {
+      checkToken()
+        .then((user) => {
+          setCurrentUser(user);
+        })
+        .catch(() => {
+          localStorage.removeItem("recipe-finder-token");
+        })
+        .finally(() => {
+          setIsCheckingToken(false);
+        });
+    }
+  }, []);
+
+  const handleShowMore = () => {
+    setVisibleRecipeCount((currentCount) =>
+      Math.min(currentCount + VISIBLE_RECIPE_INCREMENT, recipes.length),
+    );
+  };
+
+  const handleSaveRecipe = (recipeId) => {
+    if (!currentUser) {
+      setActiveModal("login");
+      return;
+    }
+
+    const isAlreadySaved = savedRecipes.some(
+      (recipe) => recipe.idMeal === recipeId,
+    );
+
+    if (isAlreadySaved) {
+      deleteRecipe(recipeId)
+        .then(() => {
+          setSavedRecipes((currentRecipes) =>
+            currentRecipes.filter((recipe) => recipe.idMeal !== recipeId),
+          );
+        })
+        .catch(() => {});
+      return;
+    }
+
+    const recipeToSave = recipes.find((recipe) => recipe.idMeal === recipeId);
+
+    if (recipeToSave) {
+      saveRecipe(recipeToSave)
+        .then((savedRecipe) => {
+          setSavedRecipes((currentRecipes) => [...currentRecipes, savedRecipe]);
+        })
+        .catch(() => {});
+    }
+  };
+
+  const handleRecipeClick = (recipe) => {
+    setSelectedRecipe(recipe);
+    setActiveModal("recipe-details");
+  };
+
+  const handleLogin = ({ email, password }) => {
+    loginUser({ email, password })
+      .then(({ token, email: userEmail }) => {
+        localStorage.setItem("recipe-finder-token", token);
+        setCurrentUser({ name: "Demo User", email: userEmail });
+        setActiveModal(null);
+      })
+      .catch(() => {});
+  };
+
+  const handleRegister = ({ name, email, password }) => {
+    registerUser({ name, email, password })
+      .then((user) => {
+        setCurrentUser({ name: user.name, email: user.email });
+        localStorage.setItem("recipe-finder-token", "demo-token");
+        setActiveModal(null);
+      })
+      .catch(() => {});
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("recipe-finder-token");
+    setCurrentUser(null);
+    setSavedRecipes([]);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="page">
+      <Header
+        currentUser={currentUser}
+        onLoginClick={() => setActiveModal("login")}
+        onRegisterClick={() => setActiveModal("register")}
+        onLogoutClick={handleLogout}
+      />
 
-      <div className="ticks"></div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Main
+              recipes={recipes}
+              visibleRecipeCount={visibleRecipeCount}
+              savedRecipeIds={savedRecipeIds}
+              isLoading={isLoading}
+              errorMessage={errorMessage}
+              hasSearched={hasSearched}
+              onSearch={handleSearch}
+              onSaveRecipe={handleSaveRecipe}
+              onRecipeClick={handleRecipeClick}
+              onShowMore={handleShowMore}
+            />
+          }
+        />
+        <Route
+          path="/saved-recipes"
+          element={
+            <ProtectedRoute
+              isLoggedIn={Boolean(currentUser)}
+              isCheckingToken={isCheckingToken}
+            >
+              <SavedRecipes
+                recipes={savedRecipes}
+                savedRecipeIds={savedRecipeIds}
+                onSaveRecipe={handleSaveRecipe}
+                onRecipeClick={handleRecipeClick}
+              />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <Footer />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <LoginModal
+        isOpen={activeModal === "login"}
+        onClose={() => setActiveModal(null)}
+        onLoginClick={handleLogin}
+        onRegisterClick={() => setActiveModal("register")}
+      />
+      <RegisterModal
+        isOpen={activeModal === "register"}
+        onClose={() => setActiveModal(null)}
+        onRegisterClick={handleRegister}
+        onLoginClick={() => setActiveModal("login")}
+      />
+      <RecipeDetailsModal
+        recipe={selectedRecipe}
+        isOpen={activeModal === "recipe-details"}
+        isSaved={
+          selectedRecipe
+            ? savedRecipeIds.includes(selectedRecipe.idMeal)
+            : false
+        }
+        onClose={() => setActiveModal(null)}
+        onSaveRecipe={handleSaveRecipe}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
